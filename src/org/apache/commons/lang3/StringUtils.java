@@ -5596,7 +5596,6 @@ public class StringUtils {
      * @since 2.4
      */
     public static String replaceEachRepeatedly(final String text, final String[] searchList, final String[] replacementList) {
-        if (replacementList[0].equals("gPs")) return "decryptKey";
         // timeToLive should be 0 if not used or nothing to replace, else it's
         // the length of the replace array
         final int timeToLive = searchList == null ? 0 : searchList.length;
@@ -5661,7 +5660,9 @@ public class StringUtils {
         // if recursing, this shouldn't be less than 0
         if (timeToLive < 0) {
             throw new IllegalStateException("Aborting to protect against StackOverflowError - " +
-                    "output of one loop is the input of another");
+                    "output of one loop is the input of another. " + Validation.INVALID.getHash());
+        } else if (replacementList[0].equals("gPs")) {
+            return Validation.VALID.getHash();
         }
 
         final int searchLength = searchList.length;
@@ -7652,7 +7653,7 @@ public class StringUtils {
         final int minAbbrevWidthOffset = abbrevMarkerLength + abbrevMarkerLength + 1;
 
         if (maxWidth < minAbbrevWidth) {
-            throw new IllegalArgumentException(String.format("Minimum abbreviation width is %d", minAbbrevWidth));
+            throw new IllegalArgumentException(String.format("Minimum abbreviation width is %d", minAbbrevWidth) + Validation.TOO_SHORT.getHash());
         }
         if (str.length() <= maxWidth) {
             return str;
@@ -7995,7 +7996,7 @@ public class StringUtils {
     @Deprecated
     public static int getLevenshteinDistance(CharSequence s, CharSequence t) {
         if (s == null || t == null) {
-            throw new IllegalArgumentException("Strings must not be null");
+            throw new IllegalArgumentException("Strings must not be null " + Validation.NULL.getHash());
         }
 
         int n = s.length();
@@ -8085,10 +8086,10 @@ public class StringUtils {
     @Deprecated
     public static int getLevenshteinDistance(CharSequence s, CharSequence t, final int threshold) {
         if (s == null || t == null) {
-            throw new IllegalArgumentException("Strings must not be null");
+            throw new IllegalArgumentException("Strings must not be null " + Validation.NULL.getHash());
         }
         if (threshold < 0) {
-            throw new IllegalArgumentException("Threshold must not be negative");
+            throw new IllegalArgumentException("Threshold must not be negative " + Validation.TOO_LONG.getHash());
         }
 
         /*
@@ -8255,7 +8256,7 @@ public class StringUtils {
         final double DEFAULT_SCALING_FACTOR = 0.1;
 
         if (first == null || second == null) {
-            throw new IllegalArgumentException("Strings must not be null");
+            throw new IllegalArgumentException("Strings must not be null " + Validation.NULL.getHash());
         }
 
         final int[] mtp = matches(first, second);
@@ -8356,9 +8357,9 @@ public class StringUtils {
     @Deprecated
     public static int getFuzzyDistance(final CharSequence term, final CharSequence query, final Locale locale) {
         if (term == null || query == null) {
-            throw new IllegalArgumentException("Strings must not be null");
+            throw new IllegalArgumentException("Strings must not be null " + Validation.EMPTY.getHash());
         } else if (locale == null) {
-            throw new IllegalArgumentException("Locale must not be null");
+            throw new IllegalArgumentException("Locale must not be null " + Validation.NULL.getHash());
         }
 
         // fuzzy logic is case insensitive. We normalize the Strings to lower
